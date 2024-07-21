@@ -6,7 +6,14 @@ function game() {
     const choices = ["apata", "iwe", "scissors"];
     
     for (let i = 0; i < maxGames; i++) {
-      const playerSelection = prompt("Choose your hand: Apata, Iwe, or Scissors").toLowerCase();
+      const playerSelection = prompt("Choose your hand: Apata, Iwe, or Scissors");
+      
+      if (playerSelection === null) {
+        console.log("Game cancelled by user.");
+        break;
+      }
+      
+      const playerSelectionLower = playerSelection.toLowerCase();
   
       const computerPlayer = () => {
         const randomChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -14,7 +21,7 @@ function game() {
       };
   
       const computerSelection = computerPlayer();
-      const overallRound = playRound(playerSelection, computerSelection);
+      const overallRound = playRound(playerSelectionLower, computerSelection);
   
       switch (overallRound) {
         case "You Win! Iwe beats Apata":
@@ -40,8 +47,10 @@ function game() {
       console.log("...");
       console.log("....");
       console.log(`Congratulations! You beat the Matrix ${playerStartPt} to ${computerStartPt}`);
-    } else {
+    } else if (computerStartPt > playerStartPt) {
       console.log(`Try again. The Matrix beat you ${computerStartPt} to ${playerStartPt}`);
+    } else {
+      console.log(`It's a tie. ${computerStartPt} to ${playerStartPt}`);
     }
   }
   
