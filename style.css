@@ -1,1 +1,7 @@
 /* Apata Iwe Scissors */ 
+/* Basic styling for the buttons and result div */
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+}
