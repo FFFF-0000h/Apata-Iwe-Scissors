@@ -1,59 +1,72 @@
-function game() {
-    const maxGames = 5; // max number of games to play
-    let computerStartPt = 0; // start point for the matrix
-    let playerStartPt = 0; // start point for player
+document.addEventListener('DOMContentLoaded', (event) => {
+  let computerStartPt = 0; // start point for the matrix
+  let playerStartPt = 0; // start point for player
+
+  const choices = ["apata", "iwe", "scissors"];
   
-    const choices = ["apata", "iwe", "scissors"];
-    
-    for (let i = 0; i < maxGames; i++) {
-      const playerSelection = prompt("Choose your hand: Apata, Iwe, or Scissors");
-      
-      if (playerSelection === null) {
-        console.log("Game cancelled by user.");
-        break;
-      }
-      
-      const playerSelectionLower = playerSelection.toLowerCase();
-  
-      const computerPlayer = () => {
-        const randomChoice = choices[Math.floor(Math.random() * choices.length)];
-        return randomChoice;
-      };
-  
+  const buttons = document.querySelectorAll('button'); // Select all buttons
+  const resultsDiv = document.getElementById('results'); // Select the results div
+
+  // Add event listeners to each button
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const playerSelection = button.id; // Get the player's choice from the button's id
       const computerSelection = computerPlayer();
-      const overallRound = playRound(playerSelectionLower, computerSelection);
-  
+      const overallRound = playRound(playerSelection, computerSelection);
+      
       switch (overallRound) {
         case "You Win! Iwe beats Apata":
         case "You Win! Apata beats Scissors":
         case "You Win! Scissors beats Iwe":
           playerStartPt++;
-          console.log("You win");
           break;
         case "You Lose! Apata beats Scissors":
         case "You Lose! Scissors beats Iwe":
         case "You Lose! Iwe beats Apata":
           computerStartPt++;
-          console.log("You lose");
-          break;
-        case "Game is Tied":
-        default:
-          console.log("Tied");
           break;
       }
-    }
-  
-    if (playerStartPt > computerStartPt) {
-      console.log("...");
-      console.log("....");
-      console.log(`Congratulations! You beat the Matrix ${playerStartPt} to ${computerStartPt}`);
-    } else if (computerStartPt > playerStartPt) {
-      console.log(`Try again. The Matrix beat you ${computerStartPt} to ${playerStartPt}`);
+
+      // Update the results and score
+      updateResults(playerSelection, computerSelection, overallRound, playerStartPt, computerStartPt);
+      
+      // Check if either player has won
+      if (playerStartPt === 5 || computerStartPt === 5) {
+        declareWinner(playerStartPt, computerStartPt);
+      }
+    });
+  });
+
+  // Function to generate a random computer choice
+  const computerPlayer = () => {
+    const randomChoice = choices[Math.floor(Math.random() * choices.length)];
+    return randomChoice;
+  };
+
+  // Function to update the results in the DOM
+  const updateResults = (playerSelection, computerSelection, overallRound, playerStartPt, computerStartPt) => {
+    resultsDiv.innerHTML = `
+      <p>You chose: ${playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1)}</p>
+      <p>Computer chose: ${computerSelection}</p>
+      <p>${overallRound}</p>
+      <p>Player Score: ${playerStartPt}</p>
+      <p>Computer Score: ${computerStartPt}</p>
+    `;
+  };
+
+  // Function to declare the winner and reset the game
+  const declareWinner = (playerStartPt, computerStartPt) => {
+    if (playerStartPt === 5) {
+      resultsDiv.innerHTML += `<p>Congratulations! You beat the Matrix ${playerStartPt} to ${computerStartPt}</p>`;
     } else {
-      console.log(`It's a tie. ${computerStartPt} to ${playerStartPt}`);
+      resultsDiv.innerHTML += `<p>Try again. The Matrix beat you ${computerStartPt} to ${playerStartPt}</p>`;
     }
-  }
-  
+    // Reset scores
+    computerStartPt = 0;
+    playerStartPt = 0;
+  };
+
+  // Function to determine the outcome of a round
   function playRound(playerSelection, computerSelection) {
     if (playerSelection === "apata" && computerSelection === "iwe") {
       return "You Lose! Iwe beats Apata";
@@ -75,4 +88,4 @@ function game() {
       return "Game is Tied";
     }
   }
-  
+});
