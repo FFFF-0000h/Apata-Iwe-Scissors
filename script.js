@@ -10,30 +10,34 @@ document.addEventListener('DOMContentLoaded', (event) => {
   // Add event listeners to each button
   buttons.forEach(button => {
     button.addEventListener('click', () => {
-      const playerSelection = button.id; // Get the player's choice from the button's id
-      const computerSelection = computerPlayer();
-      const overallRound = playRound(playerSelection, computerSelection);
-      
-      switch (overallRound) {
-        case "You Win! Iwe beats Apata":
-        case "You Win! Apata beats Scissors":
-        case "You Win! Scissors beats Iwe":
-          playerStartPt++;
-          break;
-        case "You Lose! Apata beats Scissors":
-        case "You Lose! Scissors beats Iwe":
-        case "You Lose! Iwe beats Apata":
-          computerStartPt++;
-          break;
-      }
+      if (button.id === 'reset') {
+        resetGame();
+      } else {
+          const playerSelection = button.id; // Get the player's choice from the button's id
+          const computerSelection = computerPlayer();
+          const overallRound = playRound(playerSelection, computerSelection);
+          
+          switch (overallRound) {
+            case "You Win! Iwe beats Apata":
+            case "You Win! Apata beats Scissors":
+            case "You Win! Scissors beats Iwe":
+              playerStartPt++;
+              break;
+            case "You Lose! Apata beats Scissors":
+            case "You Lose! Scissors beats Iwe":
+            case "You Lose! Iwe beats Apata":
+              computerStartPt++;
+              break;
+          }
 
-      // Update the results and score
-      updateResults(playerSelection, computerSelection, overallRound, playerStartPt, computerStartPt);
-      
-      // Check if either player has won
-      if (playerStartPt === 5 || computerStartPt === 5) {
-        declareWinner(playerStartPt, computerStartPt);
-      }
+          // Update the results and score
+          updateResults(playerSelection, computerSelection, overallRound, playerStartPt, computerStartPt);
+          
+          // Check if either player has won
+          if (playerStartPt === 5 || computerStartPt === 5) {
+            declareWinner(playerStartPt, computerStartPt);
+          }
+        }
     });
   });
 
@@ -64,6 +68,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Reset scores
     computerStartPt = 0;
     playerStartPt = 0;
+  };
+
+  // Function to reset the game
+  const resetGame = () => {
+    computerStartPt = 0;
+    playerStartPt = 0;
+    resultsDiv.innerHTML = '';
   };
 
   // Function to determine the outcome of a round
